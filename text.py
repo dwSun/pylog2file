@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from logger import Logger
+import logger
 import logging
 #from multiprocessing import Pool
 from multiprocessing.dummy import Pool
 import time
 import random
 
-logger = Logger()
+logger.init(maxBytes=2 *  1024)
 trace = logger.trace
 
 
