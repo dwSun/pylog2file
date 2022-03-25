@@ -50,13 +50,13 @@ def init(logpath="log.log", maxBytes=2 * 1024 * 1024, backupCount=10):
 def trace(label=""):
     def handle_func(func):
         def handle_args(*args, **kwargs):
-            logging.getLogger().debug("{1} {0} start...".format(func.__name__, label))
+            logging.getLogger(__package__).debug("{1} {0} start...".format(func.__name__, label))
             st = time.time()
 
             res = func(*args, **kwargs)
 
             du = time.time() - st
-            logging.getLogger().debug("{1} {0} end cost [{2:0.5}]ms...".format(func.__name__, label, du * 1000))
+            logging.getLogger(__package__).debug("{1} {0} end cost [{2:0.5}]ms...".format(func.__name__, label, du * 1000))
             return res
 
         return handle_args

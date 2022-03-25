@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import logger
+import log2file
 import logging
 
 # from multiprocessing import Pool
@@ -8,12 +8,17 @@ from multiprocessing.dummy import Pool
 import time
 import random
 
-logger.init()
-trace = logger.trace
+log2file.init()
+trace = log2file.trace
 
 
-@trace()
+@trace("test")
 def s():
+    time.sleep(0.1 + random.randint(0, 100) / 1000)
+
+
+@trace("debug")
+def s2():
     time.sleep(0.1 + random.randint(0, 100) / 1000)
 
 
@@ -22,6 +27,7 @@ def fun(t):
     for i in range(100):
         s()
         log.debug("this is a test [{0}]-[{1}]".format(t, i))
+        s2()
 
 
 p = Pool(10)
