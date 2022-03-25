@@ -6,19 +6,26 @@ import logging.handlers
 import time
 
 
-def init(logpath='log.log', maxBytes=2 * 1024 * 1024, backupCount=10):
-    '''
+class flag:
+    # 防止多次初始化
+    inited = False
+
+
+def init(logpath="log.log", maxBytes=2 * 1024 * 1024, backupCount=10):
+    """
     指定保存日志的文件路径，日志级别，以及调用文件
     将日志存入到指定的文件中
-    '''
+    """
+    if flag.inited:
+        log = logging.getLogger()
+        log.info("already initialized...")
 
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s')
+        return
+
+    formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(name)s - %(filename)s:%(lineno)d - %(message)s")
 
     # 创建一个handler，用于写入日志文件
-    fh = logging.handlers.RotatingFileHandler(logpath,
-                                              maxBytes=maxBytes,
-                                              backupCount=backupCount,
-                                              )
+    fh = logging.handlers.RotatingFileHandler(logpath, maxBytes=maxBytes, backupCount=backupCount,)
     # fh.setLevel(logging.INFO)
     fh.setLevel(logging.DEBUG)
 
@@ -37,24 +44,28 @@ def init(logpath='log.log', maxBytes=2 * 1024 * 1024, backupCount=10):
     logging.root.addHandler(fh)
     logging.root.setLevel(logging.DEBUG)
 
+    flag.inited = True
+
 
 def trace(label=""):
     def handle_func(func):
         def handle_args(*args, **kwargs):
-            logging.getLogger().debug('{1} {0} start...'.format(func.__name__, label))
+            logging.getLogger().debug("{1} {0} start...".format(func.__name__, label))
             st = time.time()
 
             res = func(*args, **kwargs)
 
             du = time.time() - st
-            logging.getLogger().debug('{1} {0} end cost [{2:0.5}]ms...'.format(func.__name__, label, du * 1000))
+            logging.getLogger().debug("{1} {0} end cost [{2:0.5}]ms...".format(func.__name__, label, du * 1000))
             return res
+
         return handle_args
+
     return handle_func
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     init()
 
     log = logging.getLogger()
-    log.error('cc')
+    log.error("cc")

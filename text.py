@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 import logger
 import logging
-#from multiprocessing import Pool
+
+# from multiprocessing import Pool
 from multiprocessing.dummy import Pool
 import time
 import random
 
-logger.init(maxBytes=2 *  1024)
+logger.init()
 trace = logger.trace
 
 
@@ -20,7 +21,7 @@ def fun(t):
     log = logging.getLogger(name=str(t))
     for i in range(100):
         s()
-        log.debug('this is a test [{0}]-[{1}]'.format(t, i))
+        log.debug("this is a test [{0}]-[{1}]".format(t, i))
 
 
 p = Pool(10)
