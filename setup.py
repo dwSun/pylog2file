@@ -5,7 +5,7 @@ with open("README.md", "r") as inf:
 
 setuptools.setup(
     name="log2file",
-    version="1.0",
+    version="1.1",
     author="dwSun",
     author_email="",
     description="A python logging wrapper",
@@ -14,5 +14,9 @@ setuptools.setup(
     url="https://github.com/dwSun/pylog2file",
     packages=setuptools.find_packages(),
     install_requires=[],
-    classifiers=("Programming Language :: Python :: 3", "License :: OSI Approved :: MIT License", "Operating System :: OS Independent",),
+    classifiers=(
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ),
 )
