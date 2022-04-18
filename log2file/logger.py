@@ -11,7 +11,9 @@ class flag:
     inited = False
 
 
-def init(logpath="log.log", maxBytes=20 * 1024 * 1024, backupCount=10):
+def init(
+    logpath="log.log", console=False, maxBytes=20 * 1024 * 1024, backupCount=10
+):
     """
     指定保存日志的文件路径，日志级别，以及调用文件
     将日志存入到指定的文件中
@@ -35,7 +37,10 @@ def init(logpath="log.log", maxBytes=20 * 1024 * 1024, backupCount=10):
 
     # 再创建一个handler，用于输出到控制台
     ch = logging.StreamHandler()
-    ch.setLevel(logging.ERROR)
+    if console:
+        ch.setLevel(logging.DEBUG)
+    else:
+        ch.setLevel(logging.ERROR)
 
     # 定义handler的输出格式
     fh.setFormatter(formatter)

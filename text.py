@@ -8,7 +8,7 @@ from multiprocessing.dummy import Pool
 import time
 import random
 
-log2file.init()
+log2file.init(console=True)
 trace = log2file.trace
 
 

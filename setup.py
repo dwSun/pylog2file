@@ -5,7 +5,7 @@ with open("README.md", "r") as inf:
 
 setuptools.setup(
     name="log2file",
-    version="1.2",
+    version="1.3",
     author="dwSun",
     author_email="",
     description="A python logging wrapper",
