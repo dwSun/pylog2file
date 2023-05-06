@@ -6,22 +6,26 @@ import logging.handlers
 import time
 
 
-class flag:
-    # 防止多次初始化
-    inited = False
-
-
 def init(
-    logpath="log.log", console=False, maxBytes=20 * 1024 * 1024, backupCount=10
+    logpath="log.log",
+    name=None,
+    console=False,
+    maxBytes=20 * 1024 * 1024,
+    backupCount=10,
 ):
     """
     指定保存日志的文件路径，日志级别，以及调用文件
     将日志存入到指定的文件中
     """
-    if flag.inited:
-        log = logging.getLogger()
-        log.info("already initialized...")
 
+    if name is None:
+        # 给logger添加handler
+        logger = logging.root
+    else:
+        logger = logging.getLogger(name)
+
+    if logger.hasHandlers():
+        logger.info("already initialized...")
         return
 
     formatter = logging.Formatter(
@@ -30,7 +34,9 @@ def init(
 
     # 创建一个handler，用于写入日志文件
     fh = logging.handlers.RotatingFileHandler(
-        logpath, maxBytes=maxBytes, backupCount=backupCount,
+        logpath,
+        maxBytes=maxBytes,
+        backupCount=backupCount,
     )
     # fh.setLevel(logging.INFO)
     fh.setLevel(logging.DEBUG)
@@ -47,36 +53,37 @@ def init(
     ch.setFormatter(formatter)
 
     # 给logger添加handler
-    logging.root.addHandler(ch)
-    logging.root.setLevel(logging.DEBUG)
+    logger.addHandler(ch)
+    logger.setLevel(logging.DEBUG)
 
-    logging.root.addHandler(fh)
-    logging.root.setLevel(logging.DEBUG)
-
-    flag.inited = True
+    logger.addHandler(fh)
+    logger.setLevel(logging.DEBUG)
 
 
-def trace(label=""):
-    def handle_func(func):
-        def handle_args(*args, **kwargs):
-            logging.getLogger(__package__).debug(
-                "{1} {0} start...".format(func.__name__, label)
-            )
-            st = time.time()
-
-            res = func(*args, **kwargs)
-
-            du = time.time() - st
-            logging.getLogger(__package__).debug(
-                "{1} {0} end cost [{2:.2f}]ms...".format(
-                    func.__name__, label, du * 1000
+def trace(name=None):
+    def trace(label=""):
+        def handle_func(func):
+            def handle_args(*args, **kwargs):
+                logging.getLogger(name).debug(
+                    "{1} {0} start...".format(func.__name__, label)
                 )
-            )
-            return res
+                st = time.time()
 
-        return handle_args
+                res = func(*args, **kwargs)
 
-    return handle_func
+                du = time.time() - st
+                logging.getLogger(name).debug(
+                    "{1} {0} end cost [{2:.2f}]ms...".format(
+                        func.__name__, label, du * 1000
+                    )
+                )
+                return res
+
+            return handle_args
+
+        return handle_func
+
+    return trace
 
 
 if __name__ == "__main__":
